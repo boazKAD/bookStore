@@ -11,7 +11,7 @@ export const useAuthStore = create((set) => ({
 
         try {
             console.log('Registering user:', { username, email, password });
-            const response = await fetch('http://192.168.1.65:3000/api/auth/register', {
+            const response = await fetch('https://bookstore-ioi1.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
