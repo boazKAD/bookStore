@@ -11,8 +11,8 @@ export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const { user, isLoading, register } = useAuthStore();
-    console.log(user);
+    const { user, isLoading, register, token } = useAuthStore();
+    console.log(user, token);
     const handleSignup = async () => {
         // Handle signup logic here
         const result = await register(username, email, password);
