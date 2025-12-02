@@ -1,15 +1,39 @@
-import { Stack } from "expo-router";
+// app/_layout.tsx
+import { Stack, useRouter, useSegments, useFocusEffect } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SafeScreen from "../components/SafeScreen";
 import { StatusBar } from "react-native";
+import { useAuthStore } from "../store/authStore";
+import { useCallback, useEffect } from "react";
 
 export default function RootLayout() {
+  const router = useRouter();
+  const segments = useSegments();
+  const { checkAuth, user, token, logout } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const isAuthScreen = segments[0] === "auth";
+      const isSignedIn = user && token;
+
+      if (!isSignedIn && !isAuthScreen) {
+        router.replace("/auth");
+      } else if (isSignedIn && isAuthScreen) {
+        router.replace("/tabs");
+      }
+    }, [segments, user, token])
+  );
+
   return (
     <SafeAreaProvider>
       <SafeScreen>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="auth" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="auth" />
+          <Stack.Screen name="tabs" />
         </Stack>
       </SafeScreen>
       <StatusBar barStyle="dark-content" />
